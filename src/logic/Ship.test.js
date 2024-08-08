@@ -1,10 +1,10 @@
 import Ship from './Ship';
-// test if isSunk calculates when a ship is sunk correctly
+
 test('ship hit', () => {
   const ship = new Ship(5);
   ship.hit();
   ship.hit();
-  expect(ship.getNumberOfTimesHit).toBe(2);
+  expect(ship.numOfHits).toBe(2);
 });
 
 test('ship sunk', () => {
@@ -12,7 +12,7 @@ test('ship sunk', () => {
   ship.hit();
   ship.hit();
   ship.hit();
-  expect(ship.isSunk).toBeTruthy();
+  expect(ship.isSunk()).toBeTruthy();
 });
 
 test('ship not sunk', () => {
@@ -20,5 +20,5 @@ test('ship not sunk', () => {
   ship.hit();
   ship.hit();
   ship.hit();
-  expect(ship.isSunk).toBeFalsy();
+  expect(ship.isSunk()).toBeFalsy();
 });
