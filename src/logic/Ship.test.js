@@ -1,5 +1,5 @@
 import Ship from './Ship';
-// test if isSunk calculates when a ship is sunk correctly
+
 test('ship hit', () => {
   const ship = new Ship(5);
   ship.hit();
