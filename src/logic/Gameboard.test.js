@@ -32,17 +32,30 @@ test('find node', () => {
   expect(board.find(8, 10)).toMatchObject({ x: 8, y: 10 });
 });
 
-// test('attack hit', () => {
-//   const board = new Gameboard();
-//   board.placeShip(board.ships[0], 1, 1, 'vert');
-//   board.receiveAttack(1, 5).toBeTruthy();
-// });
+test('attack hit', () => {
+  const board = new Gameboard();
+  board.placeShip(board.ships[0], 1, 1, 'vert');
+  expect(board.receiveAttack(1, 5)).toBeTruthy();
+});
 
-// test('attack miss', () => {
-//   const board = new Gameboard();
-//   board.placeShip(board.ships[0], 1, 1, 'vert');
-//   board.receiveAttack(2, 1).toBeFalsy();
-// });
+test('attack miss', () => {
+  const board = new Gameboard();
+  board.placeShip(board.ships[0], 1, 1, 'vert');
+  expect(board.receiveAttack(2, 1)).toBeFalsy();
+});
+
+test('attack same cell twice', () => {
+  const board = new Gameboard();
+  board.receiveAttack(5, 5);
+  expect(board.receiveAttack(5, 5)).toBeFalsy();
+});
+
+test('attack same ship twice', () => {
+  const board = new Gameboard();
+  board.placeShip(board.ships[4], 5, 5, 'vert');
+  board.receiveAttack(5, 5);
+  expect(board.receiveAttack(5, 5)).toBeFalsy();
+});
 
 // receiveAttack - either hit a ship or hit an empty cell
 // if ship record hit
