@@ -5,6 +5,7 @@ class Cell {
     this.xCoord = x;
     this.yCoord = y;
     this.shipPart = false;
+    this.shipType = null;
   }
 
   get x() {
@@ -22,13 +23,21 @@ class Cell {
   set isShip(bool) {
     this.shipPart = bool;
   }
+
+  get ship() {
+    return this.shipType;
+  }
+
+  set ship(obj) {
+    this.shipType = obj;
+  }
 }
 
 export default class Gameboard {
   constructor() {
     this.board = this.makeBoard();
-    this.missed = [];
-    this.hit = [];
+    this.misses = [];
+    this.hits = [];
     this.ships = [
       new Ship(5),
       new Ship(4),
@@ -52,7 +61,7 @@ export default class Gameboard {
     return this.board.find((node) => node.x === x && node.y === y);
   }
   // Check for out of bounds ship placement
-  checkBounds(value) {
+  inBounds(value) {
     return value > 10 || value < 1 ? false : true;
   }
   // Check for already occupied cell
@@ -69,38 +78,53 @@ export default class Gameboard {
   canPlaceShip(ship, x, y, direction) {
     // dir equals direction's starting value(x or y) so it can be checked more easily
     const dir = direction === 'hor' ? x : y;
-    if (!this.checkBounds(dir + ship.length - 1)) return false;
+    if (!this.inBounds(dir + ship.length - 1)) return false;
     if (!this.checkOverlap(ship, x, y, dir)) return false;
     return true;
   }
   // Mark every cell the ship occupies
-  markShip(ship, x, y, direction) {
+  markShip(ship, x, y, dir) {
     for (let i = 0; i < ship.length; i++) {
-      const cell =
-        direction === 'hor' ? this.find(x + i, y) : this.find(x, y + i);
+      const cell = dir === 'hor' ? this.find(x + i, y) : this.find(x, y + i);
       cell.isShip = true;
+      cell.ship = ship;
     }
   }
   // Place a ship on the board
-  placeShip(ship, x, y, direction) {
+  placeShip(ship, x, y, dir) {
     // Check if a ship can be placed on the board
-    if (!this.canPlaceShip(ship, x, y, direction)) return false;
+    if (!this.canPlaceShip(ship, x, y, dir)) return false;
     // Place the ship on the board
-    this.markShip(ship, x, y, direction);
+    this.markShip(ship, x, y, dir);
     return true;
   }
 
-  // receiveAttack(x, y) {
-  //   const cell = find(x, y);
-  //   // Check if cell is among missed cells
-  //   for (const miss of missed) {
-  //     if (cell === miss) return false;
-  //   }
-  //   // try to find missed node this way
-  //   this.missed.find((node) => node.x === x && node.y === y);
+  wasAttacked(arr, cell) {
+    return arr.includes(cell);
+  }
 
-  // check if cell is among visited first
-  // if cell isn't part of a ship then record it as visited
-  // check if it's a ship and if it's hit
-  // }
+  receiveAttack(x, y) {
+    // Check if coordinates are in bounds
+    if (!this.inBounds(x) || !this.inBounds(y)) return false;
+
+    const cell = this.find(x, y);
+    // Check if cell was already attacked previously
+    if (
+      this.wasAttacked(this.misses, cell) ||
+      this.wasAttacked(this.hits, cell)
+    ) {
+      return false;
+    }
+    // Register hit on the ship
+    if (cell.isShip) {
+      cell.ship.hit();
+      this.hits.push(cell);
+      return true;
+    }
+    // Register miss on the board
+    if (!cell.isShip) {
+      this.misses.push(cell);
+      return false;
+    }
+  }
 }

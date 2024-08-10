@@ -57,11 +57,69 @@ test('attack same ship twice', () => {
   expect(board.receiveAttack(5, 5)).toBeFalsy();
 });
 
-// receiveAttack - either hit a ship or hit an empty cell
-// if ship record hit
-// if empty record it on gameboard
-// gameboard should report if all ships are sunk - allShipsSunk();
+test('all ships sunk', () => {
+  const board = new Gameboard();
 
-// there's also an option for attacking an already attacked spot?
+  board.placeShip(board.ships[0], 1, 1, 'vert');
+  board.placeShip(board.ships[1], 2, 1, 'vert');
+  board.placeShip(board.ships[2], 3, 1, 'vert');
+  board.placeShip(board.ships[3], 4, 1, 'vert');
+  board.placeShip(board.ships[4], 5, 1, 'vert');
 
-// Gameboards should be able to report whether or not all of their ships have been sunk.
+  board.receiveAttack(1, 1);
+  board.receiveAttack(1, 2);
+  board.receiveAttack(1, 3);
+  board.receiveAttack(1, 4);
+  board.receiveAttack(1, 5);
+
+  board.receiveAttack(2, 1);
+  board.receiveAttack(2, 2);
+  board.receiveAttack(2, 3);
+  board.receiveAttack(2, 4);
+
+  board.receiveAttack(3, 1);
+  board.receiveAttack(3, 2);
+  board.receiveAttack(3, 3);
+
+  board.receiveAttack(4, 1);
+  board.receiveAttack(4, 2);
+  board.receiveAttack(4, 3);
+
+  board.receiveAttack(5, 1);
+  board.receiveAttack(5, 2);
+
+  expect(board.allShipsSunk()).toBeTruthy();
+});
+
+test('not all ships sunk', () => {
+  const board = new Gameboard();
+
+  board.placeShip(board.ships[0], 1, 1, 'vert');
+  board.placeShip(board.ships[1], 2, 1, 'vert');
+  board.placeShip(board.ships[2], 3, 1, 'vert');
+  board.placeShip(board.ships[3], 4, 1, 'vert');
+  board.placeShip(board.ships[4], 5, 1, 'vert');
+
+  board.receiveAttack(1, 1);
+  board.receiveAttack(1, 2);
+  board.receiveAttack(1, 3);
+  board.receiveAttack(1, 4);
+
+  board.receiveAttack(2, 1);
+  board.receiveAttack(2, 2);
+  board.receiveAttack(2, 3);
+  board.receiveAttack(2, 4);
+
+  board.receiveAttack(3, 1);
+  board.receiveAttack(3, 2);
+  board.receiveAttack(3, 3);
+
+  board.receiveAttack(4, 1);
+  board.receiveAttack(4, 2);
+  board.receiveAttack(4, 3);
+
+  board.receiveAttack(5, 1);
+  board.receiveAttack(5, 2);
+
+  expect(board.allShipsSunk()).toBeFalsy();
+});
