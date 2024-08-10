@@ -1,37 +1,5 @@
 import Ship from './Ship';
-
-class Cell {
-  constructor(x, y) {
-    this.xCoord = x;
-    this.yCoord = y;
-    this.shipPart = false;
-    this.shipType = null;
-  }
-
-  get x() {
-    return this.xCoord;
-  }
-
-  get y() {
-    return this.yCoord;
-  }
-
-  get isShip() {
-    return this.shipPart;
-  }
-
-  set isShip(bool) {
-    this.shipPart = bool;
-  }
-
-  get ship() {
-    return this.shipType;
-  }
-
-  set ship(obj) {
-    this.shipType = obj;
-  }
-}
+import Cell from './Cell';
 
 export default class Gameboard {
   constructor() {
@@ -65,21 +33,21 @@ export default class Gameboard {
     return value > 10 || value < 1 ? false : true;
   }
   // Check for already occupied cell
-  checkOverlap(ship, x, y, dir) {
+  overlap(ship, x, y, dir) {
     for (let i = 0; i < ship.length; i++) {
       const cell = dir === x ? this.find(x + i, y) : this.find(x, y + i);
       if (cell.isShip === true) {
-        return false;
+        return true;
       }
     }
-    return true;
+    return false;
   }
   // Check if a ship can be placed
   canPlaceShip(ship, x, y, direction) {
     // dir equals direction's starting value(x or y) so it can be checked more easily
     const dir = direction === 'hor' ? x : y;
     if (!this.inBounds(dir + ship.length - 1)) return false;
-    if (!this.checkOverlap(ship, x, y, dir)) return false;
+    if (this.overlap(ship, x, y, dir)) return false;
     return true;
   }
   // Mark every cell the ship occupies
@@ -98,11 +66,16 @@ export default class Gameboard {
     this.markShip(ship, x, y, dir);
     return true;
   }
-
+  // Checks if all ships have been sunk
+  allShipsSunk() {
+    return this.ships.every((ship) => ship.isSunk());
+  }
+  // Check if cell was previously attacked
   wasAttacked(arr, cell) {
     return arr.includes(cell);
   }
-
+  // Takes a pair of coordinates and determines whether or not
+  // the attack hit a ship
   receiveAttack(x, y) {
     // Check if coordinates are in bounds
     if (!this.inBounds(x) || !this.inBounds(y)) return false;
