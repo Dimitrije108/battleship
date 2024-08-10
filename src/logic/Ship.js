@@ -1,7 +1,7 @@
 // use git branching
 export default class Ship {
   constructor(length) {
-    this.length = length;
+    this.shipLength = length;
     this.numOfTimesHit = 0;
     this.sunk = false;
   }
@@ -10,11 +10,15 @@ export default class Ship {
     return this.numOfTimesHit;
   }
 
+  get length() {
+    return this.shipLength;
+  }
+
   hit() {
     this.numOfTimesHit += 1;
   }
 
   isSunk() {
-    return true ? this.length === this.numOfTimesHit : false;
+    return this.length === this.numOfTimesHit ? true : false;
   }
 }
