@@ -70,10 +70,6 @@ export default class Gameboard {
   allShipsSunk() {
     return this.ships.every((ship) => ship.isSunk());
   }
-  // Check if cell was previously attacked
-  wasAttacked(arr, cell) {
-    return arr.includes(cell);
-  }
   // Takes a pair of coordinates and determines whether or not
   // the attack hit a ship
   receiveAttack(x, y) {
@@ -82,10 +78,7 @@ export default class Gameboard {
 
     const cell = this.find(x, y);
     // Check if cell was already attacked previously
-    if (
-      this.wasAttacked(this.misses, cell) ||
-      this.wasAttacked(this.hits, cell)
-    ) {
+    if (this.misses.includes(cell) || this.hits.includes(cell)) {
       return false;
     }
     // Register hit on the ship
