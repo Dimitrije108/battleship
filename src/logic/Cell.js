@@ -4,6 +4,7 @@ export default class Cell {
     this.yCoord = y;
     this.shipPart = false;
     this.shipType = null;
+    this.hit = false;
   }
 
   get x() {
@@ -16,6 +17,10 @@ export default class Cell {
 
   get isShip() {
     return this.shipPart;
+  }
+
+  get isHit() {
+    return this.hit;
   }
 
   set isShip(bool) {
