@@ -19,7 +19,7 @@ export default class Gameboard {
     const arr = [];
     for (let i = 1; i <= 10; i++) {
       for (let j = 1; j <= 10; j++) {
-        arr.push(new Cell(i, j));
+        arr.push(new Cell(j, i));
       }
     }
     return arr;

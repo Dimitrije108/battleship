@@ -11,6 +11,7 @@ export default function displayBoard(board, ships = false) {
     if (cell.isHit) square.classList.add('hit');
     if (cell.isHit && cell.isShip) square.classList.add('hitShip');
     if (ships && cell.isShip) square.classList.add('ship');
+    if (!ships) square.classList.add('active');
     boardCont.append(square);
   });
   cont.append(boardCont);

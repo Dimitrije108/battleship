@@ -3,10 +3,10 @@ import Gameboard from './Gameboard';
 export default class Player {
   constructor(name) {
     this.name = name;
-    this.gameboard = new Gameboard();
+    this.board = new Gameboard();
   }
 
-  get board() {
-    return this.gameboard.board;
+  get gameboard() {
+    return this.board.board;
   }
 }
