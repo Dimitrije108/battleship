@@ -7,11 +7,11 @@ export default class Gameboard {
     this.misses = [];
     this.hits = [];
     this.ships = [
-      new Ship(5),
-      new Ship(4),
-      new Ship(3),
-      new Ship(3),
-      new Ship(2),
+      new Ship(5, 'carrier'),
+      new Ship(4, 'battleship'),
+      new Ship(3, 'destroyer'),
+      new Ship(3, 'submarine'),
+      new Ship(2, 'patrol'),
     ];
   }
   // Construct the 10x10 battleship gameboard

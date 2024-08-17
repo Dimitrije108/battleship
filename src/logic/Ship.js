@@ -1,7 +1,8 @@
 // use git branching
 export default class Ship {
-  constructor(length) {
+  constructor(length, name) {
     this.shipLength = length;
+    this.name = name;
     this.numOfTimesHit = 0;
     this.sunk = false;
   }

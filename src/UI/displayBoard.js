@@ -1,8 +1,6 @@
 // Create and display player gameboard cells
 export function dispBoard(board) {
-  const cont = document.querySelector('.player-board');
-
-  const boardCont = document.createElement('div');
+  const boardCont = document.querySelector('.board');
   boardCont.classList.add('board');
 
   board.forEach((cell) => {
@@ -11,7 +9,10 @@ export function dispBoard(board) {
     boardCont.append(square);
   });
 
-  cont.append(boardCont);
+  boardCont.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+  });
 }
 // Create and display player computer cells
 export function dispCompBoard(board) {
@@ -28,13 +29,16 @@ export function dispCompBoard(board) {
 
   cont.append(boardCont);
 }
+
+export function delBoard() {
+  if (document.querySelector('.board')) {
+    document.querySelector('.board').textContent = '';
+  }
+}
 // Display player name above the board
 export function dispName(name) {
-  const cont = document.querySelector('.player-board');
-  const plName = document.createElement('div');
-  plName.classList.add('player-name');
-  plName.textContent = name;
-  cont.append(plName);
+  const plName = document.querySelector('.player-name');
+  plName.textContent = `Admiral ${name}`;
 }
 // Create gameboard cell
 function createCell(cell) {
@@ -54,6 +58,14 @@ export function dispShips(ships) {
 
   ships.forEach((ship) => {
     const shipEl = createShip(ship);
+    shipEl.classList.add(ship.name);
+    shipEl.draggable = true;
+
+    shipEl.addEventListener('dragstart', (e) => {
+      e.dataTransfer.setData('text/plain', ship.name);
+      e.dataTransfer.effectAllowed = 'move';
+    });
+
     shipsCont.append(shipEl);
   });
 
