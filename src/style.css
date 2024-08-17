@@ -19,7 +19,7 @@ body {
   height: 100%;
   font-family: MagedovMilitary, Arial, Helvetica, sans-serif;
   font-size: 1.5rem;
-  color: white;
+  color: rgba(255, 255, 255, 0.9);
   background-image: url('../assets/img/deep-sea.jpg');
   background-repeat: no-repeat;
   background-size: cover;
@@ -28,8 +28,7 @@ body {
 }
 
 .title {
-  padding-top: 1rem;
-  padding-bottom: 2rem;
+  padding: 1rem 0;
   font-size: 3rem;
   text-align: center;
   letter-spacing: 2px;
@@ -44,14 +43,17 @@ body {
 
 .player-name,
 .comp-name {
-  padding-bottom: 4px;
+  padding-bottom: 6px;
   font-family: Admiral, Arial, Helvetica, sans-serif;
   text-align: center;
   text-decoration: underline;
 }
 
+.player-board {
+  width: 440px;
+}
+
 .board {
-  margin: 0.5rem;
   border: 2px solid rgba(210, 210, 211, 0.7);
   display: grid;
   grid-template-columns: repeat(10, 1fr);
@@ -65,7 +67,7 @@ body {
 }
 
 .cell.ship {
-  background-color: rgb(55, 85, 168);
+  background-color: rgba(128, 83, 180, 0.5);
 }
 
 .cell.hit {
@@ -83,12 +85,14 @@ body {
 
 .ships-cont {
   width: 450px;
+  margin-top: 1rem;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-evenly;
+  gap: 10px;
 }
 
 .ship {
-  margin-bottom: 4px;
   display: flex;
+  cursor: pointer;
 }
