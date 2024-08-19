@@ -8,11 +8,6 @@ export function dispBoard(board) {
     if (cell.isShip) square.classList.add('ship');
     boardCont.append(square);
   });
-
-  boardCont.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    e.dataTransfer.dropEffect = 'move';
-  });
 }
 // Create and display player computer cells
 export function dispCompBoard(board) {
@@ -58,14 +53,8 @@ export function dispShips(ships) {
 
   ships.forEach((ship) => {
     const shipEl = createShip(ship);
-    shipEl.classList.add(ship.name);
+    shipEl.dataset.name = ship.name;
     shipEl.draggable = true;
-
-    shipEl.addEventListener('dragstart', (e) => {
-      e.dataTransfer.setData('text/plain', ship.name);
-      e.dataTransfer.effectAllowed = 'move';
-    });
-
     shipsCont.append(shipEl);
   });
 
@@ -74,14 +63,17 @@ export function dispShips(ships) {
 // Create player ships
 function createShip(ship) {
   const shipCont = document.createElement('div');
-  shipCont.classList.add('ship');
+  shipCont.classList.add('unplaced-ship');
 
   for (let i = 0; i < ship.length; i++) {
     const square = document.createElement('div');
-    square.classList.add('cell');
-    square.classList.add('ship');
+    square.classList.add('unplaced');
     shipCont.append(square);
   }
 
   return shipCont;
+}
+
+export function delShips() {
+  document.querySelector('.ships-cont').remove();
 }
