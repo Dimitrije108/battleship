@@ -6,6 +6,7 @@ export default class Gameboard {
     this.board = this.makeBoard();
     this.misses = [];
     this.hits = [];
+    this.dir = 'hor';
     this.ships = [
       new Ship(5, 'carrier'),
       new Ship(4, 'battleship'),
@@ -47,31 +48,32 @@ export default class Gameboard {
     return false;
   }
   // Check if a ship can be placed
-  canPlaceShip(ship, x, y, direction) {
+  canPlaceShip(ship, x, y) {
     // dir equals direction's starting value(x or y) so it can be checked more easily
-    const dir = direction === 'hor' ? x : y;
+    const dir = this.dir === 'hor' ? x : y;
     if (!this.inBounds(dir + ship.length - 1)) return false;
     if (this.overlap(ship, x, y, dir)) return false;
     return true;
   }
   // Mark every cell the ship occupies
-  markShip(ship, x, y, dir) {
+  markShip(ship, x, y) {
     for (let i = 0; i < ship.length; i++) {
-      const cell = dir === 'hor' ? this.find(x + i, y) : this.find(x, y + i);
+      const cell =
+        this.dir === 'hor' ? this.find(x + i, y) : this.find(x, y + i);
       cell.isShip = true;
       cell.ship = ship;
     }
   }
   // Place a ship on the board
-  placeShip(ship, x, y, dir) {
+  placeShip(ship, x, y) {
     // Check param validity
     if (typeof ship !== 'object') return;
     if (!x && !y) return;
-    if (dir !== 'hor' && dir !== 'vert') return;
+    if (this.dir !== 'hor' && this.dir !== 'vert') return;
     // Check if a ship can be placed on the board
-    if (!this.canPlaceShip(ship, x, y, dir)) return false;
+    if (!this.canPlaceShip(ship, x, y)) return false;
     // Place the ship on the board
-    this.markShip(ship, x, y, dir);
+    this.markShip(ship, x, y);
     return true;
   }
   // Checks if all ships have been sunk

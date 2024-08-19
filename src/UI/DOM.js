@@ -76,8 +76,8 @@ export default class PlayGame {
 
       const x = Number(e.target.dataset.x);
       const y = Number(e.target.dataset.y);
-      if (this.player.board.placeShip(this.dragged, x, y, 'hor')) {
-        this.player.board.placeShip(this.dragged, x, y, 'hor');
+      if (this.player.board.placeShip(this.dragged, x, y)) {
+        this.player.board.placeShip(this.dragged, x, y);
         delBoard();
         dispBoard(this.player.gameboard);
         // Delete ship el
@@ -96,6 +96,7 @@ export default class PlayGame {
       dispBoard(this.player.gameboard);
       dispShips(this.player.board.ships);
       this.initDragStart();
+      this.player.board.dir = 'hor';
     });
   }
 
@@ -103,7 +104,10 @@ export default class PlayGame {
     const changeDirBtn = document.querySelector('.change-dir-btn');
 
     changeDirBtn.addEventListener('click', () => {
+      // Update gameboard ship dir
+      this.player.board.dir = this.player.board.dir === 'hor' ? 'vert' : 'hor';
       const unplacedShips = document.querySelectorAll('.unplaced-ship');
+      // Change flex position on every ship to represent ship placement direction
       unplacedShips.forEach((ship) => {
         const dir = ship.style.flexDirection || 'row';
         ship.style.flexDirection = dir === 'row' ? 'column' : 'row';
