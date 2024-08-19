@@ -25,6 +25,7 @@ export default class PlayGame {
     this.initDraggable();
     this.initResetBtn();
     this.changeShipDir();
+    this.updateStatusBoard();
   }
 
   initDragStart() {
@@ -82,6 +83,8 @@ export default class PlayGame {
         dispBoard(this.player.gameboard);
         // Delete ship el
         document.querySelector('.dragging').remove();
+        // Check if all ships are placed
+        this.updateStatusBoard();
       }
     });
   }
@@ -97,6 +100,7 @@ export default class PlayGame {
       dispShips(this.player.board.ships);
       this.initDragStart();
       this.player.board.dir = 'hor';
+      this.updateStatusBoard();
     });
   }
 
@@ -113,6 +117,20 @@ export default class PlayGame {
         ship.style.flexDirection = dir === 'row' ? 'column' : 'row';
       });
     });
+  }
+
+  allShipsPlaced() {
+    const shipsCont = document.querySelector('.ships-cont');
+    return shipsCont.children.length === 0;
+  }
+
+  updateStatusBoard() {
+    const statusBoard = document.querySelector('.status-board');
+    if (!this.allShipsPlaced()) {
+      statusBoard.textContent = `Place your ships Admiral ${this.player.name}!`;
+      return;
+    }
+    statusBoard.textContent = `Press start to begin, Admiral ${this.player.name}!`;
   }
 
   // start game button event
