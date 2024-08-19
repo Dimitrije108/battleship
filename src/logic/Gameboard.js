@@ -24,6 +24,10 @@ export default class Gameboard {
     }
     return arr;
   }
+  // Resets the board
+  resetBoard() {
+    this.board = this.makeBoard();
+  }
   // Find board cell
   find(x, y) {
     return this.board.find((node) => node.x === x && node.y === y);
@@ -60,6 +64,10 @@ export default class Gameboard {
   }
   // Place a ship on the board
   placeShip(ship, x, y, dir) {
+    // Check param validity
+    if (typeof ship !== 'object') return;
+    if (!x && !y) return;
+    if (dir !== 'hor' && dir !== 'vert') return;
     // Check if a ship can be placed on the board
     if (!this.canPlaceShip(ship, x, y, dir)) return false;
     // Place the ship on the board
@@ -92,5 +100,14 @@ export default class Gameboard {
       this.misses.push(cell);
       return false;
     }
+  }
+  // Return an array of potential ship landing board cells
+  dropTargetCells(ship, x, y, dir) {
+    const arr = [];
+    for (let i = 0; i < ship.length; i++) {
+      const cell = dir === 'hor' ? this.find(x + i, y) : this.find(x, y + i);
+      arr.push(cell);
+    }
+    return arr;
   }
 }
