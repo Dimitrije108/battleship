@@ -12,17 +12,21 @@ export default class PlayGame {
   constructor(player = 'Ackbar') {
     this.player = new Player(player);
     this.comp = new Player('comp');
-    this.initBoard();
+    this.initSetup();
     this.dragged = null;
   }
 
-  initBoard() {
+  // TODO: place event listeners in a single init method
+  // TODO: create handlers outside the init
+
+  initSetup() {
     dispName(this.player.name);
     dispBoard(this.player.gameboard);
     dispShips(this.player.board.ships);
     dispCompBoard(this.comp.gameboard);
     this.initDragStart();
     this.initDraggable();
+    this.handleRanomizeShips();
     this.initResetBtn();
     this.changeShipDir();
     this.updateStatusBoard();
@@ -131,6 +135,18 @@ export default class PlayGame {
       return;
     }
     statusBoard.textContent = `Press start to begin, Admiral ${this.player.name}!`;
+  }
+
+  handleRanomizeShips() {
+    const randomizeBtn = document.querySelector('.randomize-ships-btn');
+    randomizeBtn.addEventListener('click', () => {
+      this.player.board.resetBoard();
+      this.player.board.randomizeShips();
+      delBoard();
+      dispBoard(this.player.gameboard);
+      delShips();
+      this.updateStatusBoard();
+    });
   }
 
   // start game button event

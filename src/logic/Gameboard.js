@@ -103,13 +103,37 @@ export default class Gameboard {
       return false;
     }
   }
-  // Return an array of potential ship landing board cells
-  dropTargetCells(ship, x, y, dir) {
-    const arr = [];
-    for (let i = 0; i < ship.length; i++) {
-      const cell = dir === 'hor' ? this.find(x + i, y) : this.find(x, y + i);
-      arr.push(cell);
-    }
-    return arr;
+  // Pick a random board coord from 1 to 10
+  randomizeCoord() {
+    return Math.floor(Math.random() * 10) + 1;
   }
+  // Randomly places all ships on the board
+  randomizeShips() {
+    this.ships.forEach((ship) => {
+      const randomDir = Math.floor(Math.random() * 2);
+      this.dir = randomDir === 0 ? 'hor' : 'vert';
+
+      let x = this.randomizeCoord();
+      let y = this.randomizeCoord();
+
+      while (!this.canPlaceShip(ship, x, y)) {
+        x = this.randomizeCoord();
+        y = this.randomizeCoord();
+      }
+
+      this.placeShip(ship, x, y);
+    });
+  }
+  // Return an array of potential ship landing board cells
+  // (When dragging a ship over the board it shows how a ship would be placed
+  // by highlighting the cells)
+  // dropTargetCells(ship, x, y) {
+  //   const arr = [];
+  //   for (let i = 0; i < ship.length; i++) {
+  //     const cell =
+  //       this.dir === 'hor' ? this.find(x + i, y) : this.find(x, y + i);
+  //     arr.push(cell);
+  //   }
+  //   return arr;
+  // }
 }

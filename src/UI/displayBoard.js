@@ -47,9 +47,7 @@ function createCell(cell) {
 }
 // Display player ships to be placed on the board
 export function dispShips(ships) {
-  const cont = document.querySelector('.player-board');
-  const shipsCont = document.createElement('div');
-  shipsCont.classList.add('ships-cont');
+  const shipsCont = document.querySelector('.ships-cont');
 
   ships.forEach((ship) => {
     const shipEl = createShip(ship);
@@ -57,8 +55,6 @@ export function dispShips(ships) {
     shipEl.draggable = true;
     shipsCont.append(shipEl);
   });
-
-  cont.append(shipsCont);
 }
 // Create player ships
 function createShip(ship) {
@@ -75,5 +71,8 @@ function createShip(ship) {
 }
 
 export function delShips() {
-  document.querySelector('.ships-cont').remove();
+  const ships = document.querySelectorAll('.unplaced-ship');
+  ships.forEach((ship) => {
+    ship.remove();
+  });
 }
