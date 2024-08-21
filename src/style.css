@@ -40,7 +40,7 @@ button {
   font-size: 3.5rem;
   font-family: MagedovMilitary, Arial, Helvetica, sans-serif;
   text-align: center;
-  letter-spacing: 2px;
+  letter-spacing: 5px;
 }
 
 .game-cont {
@@ -81,11 +81,11 @@ button {
 }
 
 .cell.hit {
-  background-color: rgb(131, 131, 136);
+  background-color: yellow;
 }
 
-.cell.hitShip {
-  background-color: rgb(204, 59, 59);
+.cell.hit.hit-ship {
+  background-color: red;
 }
 
 .board.comp > .cell:hover {
@@ -119,8 +119,8 @@ button {
   border: 2px solid rgba(210, 210, 211, 0.7);
 }
 
-.options-cont {
-  max-width: 300px;
+.info-cont {
+  width: 300px;
   height: 460px;
   padding: 0 2rem;
   display: flex;
@@ -132,6 +132,11 @@ button {
 .status-board {
   font-size: 1.4rem;
   text-align: center;
+}
+
+.btn-cont {
+  display: flex;
+  flex-direction: column;
 }
 
 .start-btn {

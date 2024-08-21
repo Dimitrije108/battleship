@@ -1,4 +1,3 @@
-// use git branching
 export default class Ship {
   constructor(length, name) {
     this.shipLength = length;
@@ -20,6 +19,7 @@ export default class Ship {
   }
 
   isSunk() {
-    return this.length === this.numOfTimesHit ? true : false;
+    this.sunk = this.length === this.numOfTimesHit;
+    return this.sunk;
   }
 }

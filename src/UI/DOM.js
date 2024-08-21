@@ -1,4 +1,4 @@
-import Player from '../logic/Player';
+import { Player, Computer } from '../logic/Player';
 import {
   dispName,
   dispBoard,
@@ -11,7 +11,7 @@ import {
 export default class PlayGame {
   constructor(player = 'Ackbar') {
     this.player = new Player(player);
-    this.comp = new Player('comp');
+    this.comp = new Computer();
     this.initSetup();
     this.dragged = null;
   }
@@ -26,10 +26,10 @@ export default class PlayGame {
     dispCompBoard(this.comp.gameboard);
     this.initDragStart();
     this.initDraggable();
-    this.handleRanomizeShips();
+    this.handleRandomizeShips();
     this.initResetBtn();
     this.changeShipDir();
-    this.updateStatusBoard();
+    this.updateGameStatus();
   }
 
   initDragStart() {
@@ -83,12 +83,12 @@ export default class PlayGame {
       const y = Number(e.target.dataset.y);
       if (this.player.board.placeShip(this.dragged, x, y)) {
         this.player.board.placeShip(this.dragged, x, y);
-        delBoard();
+        delBoard('.board');
         dispBoard(this.player.gameboard);
         // Delete ship el
         document.querySelector('.dragging').remove();
         // Check if all ships are placed
-        this.updateStatusBoard();
+        this.updateGameStatus();
       }
     });
   }
@@ -98,13 +98,13 @@ export default class PlayGame {
 
     resetBtn.addEventListener('click', () => {
       this.player.board.resetBoard();
-      delBoard();
+      delBoard('.board');
       delShips();
       dispBoard(this.player.gameboard);
       dispShips(this.player.board.ships);
       this.initDragStart();
       this.player.board.dir = 'hor';
-      this.updateStatusBoard();
+      this.updateGameStatus();
     });
   }
 
@@ -123,50 +123,100 @@ export default class PlayGame {
     });
   }
 
+  handleRandomizeShips() {
+    const randomizeBtn = document.querySelector('.randomize-ships-btn');
+    randomizeBtn.addEventListener('click', () => {
+      this.player.board.resetBoard();
+      this.player.board.randomizeShips();
+      delBoard('.board');
+      dispBoard(this.player.gameboard);
+      delShips();
+      this.updateGameStatus();
+    });
+  }
+
   allShipsPlaced() {
     const shipsCont = document.querySelector('.ships-cont');
     return shipsCont.children.length === 0;
   }
 
-  updateStatusBoard() {
+  updateGameStatus() {
     const statusBoard = document.querySelector('.status-board');
+    const startBtn = document.querySelector('.start-btn');
+
     if (!this.allShipsPlaced()) {
       statusBoard.textContent = `Place your ships Admiral ${this.player.name}!`;
+      startBtn.disabled = true;
       return;
     }
     statusBoard.textContent = `Press start to begin, Admiral ${this.player.name}!`;
+    startBtn.disabled = false;
+    this.startGame();
   }
 
-  handleRanomizeShips() {
-    const randomizeBtn = document.querySelector('.randomize-ships-btn');
-    randomizeBtn.addEventListener('click', () => {
-      this.player.board.resetBoard();
-      this.player.board.randomizeShips();
-      delBoard();
-      dispBoard(this.player.gameboard);
-      delShips();
-      this.updateStatusBoard();
+  startGame() {
+    const startBtn = document.querySelector('.start-btn');
+    const statusBoard = document.querySelector('.status-board');
+    const btnCont = document.querySelector('.btn-cont');
+
+    startBtn.addEventListener('click', () => {
+      this.comp.board.randomizeShips();
+      this.initPlay();
+      startBtn.remove();
+      btnCont.remove();
+      statusBoard.textContent = `Good luck Admiral ${this.player.name}!`;
     });
   }
 
-  // start game button event
+  initPlay() {
+    const compBoard = document.querySelector('.board.comp');
 
-  // const oppBoard = document.querySelector('.board.comp');
+    compBoard.addEventListener('click', (e) => {
+      this.playerAttack(Number(e.target.dataset.x), Number(e.target.dataset.y));
+    });
+  }
 
-  // // perform an attack on random enemy cell
-  // // don't attack the same cell twice
+  gameWon(winner) {
+    const statusBoard = document.querySelector('.status-board');
+    const compBoard = document.querySelector('.board.comp');
 
-  // // possibly add timeout and disable player attack during it
-  // // so as to simulate delay between play
-  // // add timeout into the func call itself, not here
+    if (winner.name === 'Computer') {
+      statusBoard.textContent = `You've lost, better luck next time Admiral ${this.player.name}.`;
+    }
+    statusBoard.textContent = `Congrats Admiral ${this.player.name}! You're the victor!`;
+    // stop playability after win:
+    compBoard.style.pointerEvents = 'none';
+    // create restart btn
+    // add restart btn functionality
 
-  // const handleAttack = (x, y) => {
-  //   // this.comp.board.receiveAttack(x, y);
-  //   // displayBoard(comp.gameboard);
-  //   // this.player.board.receiveAttack(this.comp.attack());
-  // };
+    // make a restart button appear
+    // which will reset all back to beginning
+    // except for the player name
+  }
 
-  // oppBoard.addEventListener('click', (e) => {
-  //   handleAttack(e.target.dataset.x, e.target.dataset.y);
-  // });
+  compAttack() {
+    const attMove = this.comp.attack();
+    this.player.board.receiveAttack(attMove[0], attMove[1]);
+    delBoard('.board');
+    dispBoard(this.player.gameboard);
+
+    if (this.player.board.allShipsSunk()) {
+      this.gameWon(this.comp);
+      return;
+    }
+  }
+
+  playerAttack(x, y) {
+    this.comp.board.receiveAttack(x, y);
+    delBoard('.board.comp');
+    dispCompBoard(this.comp.gameboard);
+
+    if (this.comp.board.allShipsSunk()) {
+      this.gameWon(this.player);
+      return;
+    }
+
+    setTimeout(() => this.compAttack(), 500);
+  }
+  // Bonus: once a ship isSunk() display it as such?
 }

@@ -19,12 +19,16 @@ export default class Cell {
     return this.shipPart;
   }
 
+  set isShip(bool) {
+    this.shipPart = bool;
+  }
+
   get isHit() {
     return this.hit;
   }
 
-  set isShip(bool) {
-    this.shipPart = bool;
+  set isHit(bool) {
+    this.hit = bool;
   }
 
   get ship() {

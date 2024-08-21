@@ -11,23 +11,17 @@ export function dispBoard(board) {
 }
 // Create and display player computer cells
 export function dispCompBoard(board) {
-  const cont = document.querySelector('.comp-board');
-
-  const boardCont = document.createElement('div');
-  boardCont.classList.add('board');
-  boardCont.classList.add('comp');
+  const boardCont = document.querySelector('.board.comp');
 
   board.forEach((cell) => {
     const square = createCell(cell);
     boardCont.append(square);
   });
-
-  cont.append(boardCont);
 }
 
-export function delBoard() {
-  if (document.querySelector('.board')) {
-    document.querySelector('.board').textContent = '';
+export function delBoard(board) {
+  if (document.querySelector(`${board}`)) {
+    document.querySelector(`${board}`).textContent = '';
   }
 }
 // Display player name above the board
@@ -42,7 +36,7 @@ function createCell(cell) {
   square.dataset.x = cell.x;
   square.dataset.y = cell.y;
   if (cell.isHit) square.classList.add('hit');
-  if (cell.isHit && cell.isShip) square.classList.add('hitShip');
+  if (cell.isHit && cell.isShip) square.classList.add('hit-ship');
   return square;
 }
 // Display player ships to be placed on the board

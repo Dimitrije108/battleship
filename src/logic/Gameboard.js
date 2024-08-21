@@ -94,11 +94,13 @@ export default class Gameboard {
     // Register hit on the ship
     if (cell.isShip) {
       cell.ship.hit();
+      cell.isHit = true;
       this.hits.push(cell);
       return true;
     }
     // Register miss on the board
     if (!cell.isShip) {
+      cell.isHit = true;
       this.misses.push(cell);
       return false;
     }
