@@ -10,6 +10,31 @@
       <div class="title">BATTLESHIP</div>
     </header>
     <main>
+      <dialog class="modal">
+        <form id="form" action="" method="dialog">
+          <div class="input-field">
+            <label for="username">Your name Admiral:</label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              minlength="1"
+              required
+            />
+          </div>
+          <div class="submit-btn-div">
+            <button class="submit-btn" type="submit" form="form">Submit</button>
+          </div>
+        </form>
+        <p class="author">
+          Photo by
+          <a href="https://www.pexels.com/@joseph-fuller-3673812/"
+            >Joseph Fuller</a
+          >
+          on
+          <a href="https://www.pexels.com/">Pexels</a>
+        </p>
+      </dialog>
       <div class="game-cont">
         <div class="player-board">
           <div class="player-name">Admiral Ackbar</div>
@@ -19,6 +44,7 @@
         <div class="info-cont">
           <div class="status-board"></div>
           <button class="start-btn" disabled>Start!</button>
+          <button class="restart-btn">Play Again!</button>
           <div class="btn-cont">
             <button class="randomize-ships-btn">Randomize ships</button>
             <button class="change-dir-btn">Change direction</button>

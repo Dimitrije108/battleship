@@ -33,6 +33,77 @@ body {
 
 button {
   cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.modal {
+  max-width: 50ch;
+
+  border: none;
+  border-radius: 0.5rem;
+  box-shadow: 3px 3px 5px 0px rgba(0, 0, 0, 0.3);
+  background-color: rgba(255, 255, 255, 0.7);
+
+  padding: 2rem 2rem 1rem 2rem;
+}
+
+.modal::backdrop {
+  background-image: url('../assets/img/battleship.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-color: rgba(0, 0, 0, 0.4);
+  background-blend-mode: overlay;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.input-field {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+label {
+  margin-right: 6px;
+}
+
+input {
+  box-sizing: border-box;
+  padding: 6px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  background-color: #f0f0f0;
+}
+
+input:focus {
+  outline: none;
+  border-bottom: 2px solid black;
+}
+
+.submit-btn {
+  margin: 1.2rem 0;
+  padding: 10px 14px;
+  background-color: #f0f0f0;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.submit-btn:hover {
+  background-color: #ffffff;
+}
+
+.author {
+  font-size: 0.7rem;
 }
 
 .title {
@@ -82,10 +153,12 @@ button {
 
 .cell.hit {
   background-color: yellow;
+  pointer-events: none;
 }
 
 .cell.hit.hit-ship {
   background-color: red;
+  pointer-events: none;
 }
 
 .board.comp > .cell:hover {
