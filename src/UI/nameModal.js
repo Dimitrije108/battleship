@@ -1,4 +1,4 @@
-import PlayGame from './DOM';
+import PlayGame from './PlayGame';
 
 export default function initNameModal() {
   const modal = document.querySelector('.modal');

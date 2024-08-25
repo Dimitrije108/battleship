@@ -2,7 +2,5 @@
 import html from './index.html';
 import './style.css';
 import initNameModal from './UI/nameModal';
-import initRestart from './UI/restartGame';
 
 initNameModal();
-initRestart();
