@@ -24,8 +24,8 @@ export default class PlayGame {
   playerAttack(x, y) {
     this.comp.board.receiveAttack(x, y);
     // Reset comp board display to update the attack
-    this.ui.delBoard('.board.comp');
-    this.ui.dispCompBoard(this.comp.gameboard);
+    this.ui.boardDisplay.delBoard('.board.comp');
+    this.ui.boardDisplay.dispCompBoard(this.comp.gameboard);
     this.ui.initBoardAttack();
     this.checkWinCond();
   }
@@ -33,8 +33,8 @@ export default class PlayGame {
   compAttack() {
     const attMove = this.comp.attack();
     this.player.board.receiveAttack(attMove[0], attMove[1]);
-    this.ui.delBoard('.board');
-    this.ui.dispBoard(this.player.gameboard);
+    this.ui.boardDisplay.delBoard('.board');
+    this.ui.boardDisplay.dispBoard(this.player.gameboard);
     this.checkWinCond();
   }
   // Check if either player or computer won the game

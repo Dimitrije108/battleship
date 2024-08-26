@@ -1,161 +1,35 @@
-import { createCell, createShip, createSetupBtn } from './utils';
+import { createSetupBtn } from './utils';
 import PlayGame from './PlayGame';
+import BoardDisplay from './BoardDisplay';
+import DragAndDrop from './DragAndDrop';
 // Sets up the initial game UI
 export default class GameUI {
   constructor(player, comp, playGame) {
     this.player = player;
     this.comp = comp;
     this.playGame = playGame;
-    this.dragged = null;
+    this.boardDisplay = new BoardDisplay();
+    this.dragAndDrop = new DragAndDrop(
+      this.player,
+      this.boardDisplay,
+      this.updateGameStatus.bind(this)
+    );
     this.init();
   }
 
   init() {
-    this.dispName(this.player.name);
-    this.dispBoard(this.player.gameboard);
-    this.dispCompBoard(this.comp.gameboard);
-    this.dispShips(this.player.board.ships);
-    this.initDragStart();
-    this.initDragEnd();
+    this.boardDisplay.dispName(this.player.name);
+    this.boardDisplay.dispBoard(this.player.gameboard);
+    this.boardDisplay.dispCompBoard(this.comp.gameboard);
+    this.boardDisplay.dispShips(this.player.board.ships);
+    this.dragAndDrop.initDragStart();
+    this.dragAndDrop.initDragEnd();
     this.initStartBtn();
     this.initRandomizeShips();
     this.initShipDir();
     this.initShipReset();
     this.updateGameStatus();
     this.initBoardAttack();
-  }
-  // Display player name above the board
-  dispName(name) {
-    const plName = document.querySelector('.player-name');
-    plName.textContent = `Admiral ${name}`;
-  }
-  // Create and display player gameboard cells
-  dispBoard(board) {
-    const boardCont = document.querySelector('.board-cont');
-    const newBoard = document.createElement('div');
-    newBoard.classList.add('board');
-
-    board.forEach((cell) => {
-      const square = createCell(cell);
-      if (cell.isShip) square.classList.add('ship');
-      newBoard.append(square);
-    });
-
-    boardCont.append(newBoard);
-  }
-  // Create and display computer gameboard cells
-  dispCompBoard(board) {
-    const boardCont = document.querySelector('.comp-board-cont');
-    const compBoard = document.createElement('div');
-    compBoard.classList.add('board');
-    compBoard.classList.add('comp');
-
-    board.forEach((cell) => {
-      const square = createCell(cell);
-      compBoard.append(square);
-    });
-
-    boardCont.append(compBoard);
-  }
-  // Delete the displayed board
-  delBoard(board) {
-    if (document.querySelector(`${board}`)) {
-      document.querySelector(`${board}`).remove();
-    }
-  }
-  // Display player ships to be placed on the board
-  dispShips(ships) {
-    const shipsCont = document.querySelector('.ships-cont');
-
-    ships.forEach((ship) => {
-      const shipEl = createShip(ship);
-      shipEl.dataset.name = ship.name;
-      shipEl.draggable = true;
-      shipsCont.append(shipEl);
-    });
-  }
-  // Delete unplaced ships
-  delShips() {
-    const ships = document.querySelectorAll('.unplaced-ship');
-    ships.forEach((ship) => ship.remove());
-  }
-  // Add dragstart listeners to unplaced ships so they can be dragged
-  initDragStart() {
-    const unplacedShips = document.querySelectorAll('.unplaced-ship');
-
-    unplacedShips.forEach((ship) => {
-      ship.addEventListener('dragstart', (e) => {
-        this.handleDragStart(ship, e);
-      });
-
-      ship.addEventListener('dragend', () => {
-        this.dragged = null;
-        ship.classList.remove('dragging');
-      });
-    });
-  }
-  // Setup drag start for a ship
-  handleDragStart(ship, e) {
-    const shipName = ship.dataset.name;
-    // Find the dragged ship object
-    this.dragged = this.player.board.ships.find(
-      (ship) => ship.name === shipName
-    );
-    e.dataTransfer.effectAllowed = 'move';
-    // Add class so it can be recognized easier
-    e.target.classList.add('dragging');
-  }
-  // Add all other drag listeners so a ship can be placed on the board
-  initDragEnd() {
-    const board = document.querySelector('.board');
-    board.addEventListener('dragover', (e) => this.handleDragOver(e));
-    board.addEventListener('dragleave', (e) => this.handleDragLeave(e));
-    board.addEventListener('drop', (e) => this.handleDrop(e));
-  }
-
-  handleDragOver(e) {
-    e.preventDefault();
-    const draggable = document.querySelector('.unplaced-ship.dragging');
-    // Prevent placed item being draggable again issue
-    if (!draggable) {
-      e.dataTransfer.dropEffect = 'none';
-      return;
-    }
-    e.dataTransfer.dropEffect = 'move';
-    // Highlight cell the ship will potentially be placed on
-    e.target.classList.add('highlight');
-  }
-
-  handleDragLeave(e) {
-    e.preventDefault();
-    // Remove the highlight cell effect when a cell is no longer hovered over
-    e.target.classList.remove('highlight');
-  }
-
-  handleDrop(e) {
-    e.preventDefault();
-    e.target.classList.remove('highlight');
-    // Prevent placed item being draggable again issue
-    const draggable = document.querySelector('.unplaced-ship.dragging');
-    if (!draggable) return;
-
-    const x = Number(e.target.dataset.x);
-    const y = Number(e.target.dataset.y);
-    // Pass the required info for a ship to be placed on the board
-    this.handleShipPlacement(x, y);
-  }
-  // If a ship is able to be placed on the board, place it
-  handleShipPlacement(x, y) {
-    if (this.player.board.placeShip(this.dragged, x, y)) {
-      this.player.board.placeShip(this.dragged, x, y);
-      this.delBoard('.board');
-      this.dispBoard(this.player.gameboard);
-      this.initDragEnd();
-      // Delete the placed ship el so it's no longer available
-      document.querySelector('.dragging').remove();
-      // Check if all ships are placed on the board
-      this.updateGameStatus();
-    }
   }
   // Setup all btn listeners: start, randomize ships, change ship dir and reset ships
   initStartBtn() {
@@ -200,9 +74,9 @@ export default class GameUI {
   handleRandomizeShips() {
     this.player.board.resetBoard();
     this.player.board.randomizeShips();
-    this.delBoard('.board');
-    this.dispBoard(this.player.gameboard);
-    this.delShips();
+    this.boardDisplay.delBoard('.board');
+    this.boardDisplay.dispBoard(this.player.gameboard);
+    this.boardDisplay.delShips();
     this.updateGameStatus();
   }
   // Change the ship direction and display it as such
@@ -219,12 +93,12 @@ export default class GameUI {
   // Resets ships to their initial unplaced position so they can be placed again
   handleShipReset() {
     this.player.board.resetBoard();
-    this.delBoard('.board');
-    this.delShips();
-    this.dispBoard(this.player.gameboard);
-    this.dispShips(this.player.board.ships);
-    this.initDragStart();
-    this.initDragEnd();
+    this.boardDisplay.delBoard('.board');
+    this.boardDisplay.delShips();
+    this.boardDisplay.dispBoard(this.player.gameboard);
+    this.boardDisplay.dispShips(this.player.board.ships);
+    this.dragAndDrop.initDragStart();
+    this.dragAndDrop.initDragEnd();
     this.player.board.dir = 'hor';
     this.updateGameStatus();
   }
@@ -272,8 +146,8 @@ export default class GameUI {
   // same player name
   handleRestart() {
     // Remove the last game's boards
-    this.delBoard('.board');
-    this.delBoard('.board.comp');
+    this.boardDisplay.delBoard('.board');
+    this.boardDisplay.delBoard('.board.comp');
     // Create a new game instance
     new PlayGame(this.player.name);
     // Hide the restart button again
