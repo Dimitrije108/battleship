@@ -35,13 +35,13 @@ export default class Gameboard {
   }
   // Check for out of bounds ship placement
   inBounds(value) {
-    return value > 10 || value < 1 ? false : true;
+    return value >= 1 && value <= 10;
   }
   // Check for already occupied cell
   overlap(ship, x, y, dir) {
     for (let i = 0; i < ship.length; i++) {
       const cell = dir === x ? this.find(x + i, y) : this.find(x, y + i);
-      if (cell.isShip === true) {
+      if (cell.isShip) {
         return true;
       }
     }
@@ -80,17 +80,27 @@ export default class Gameboard {
   allShipsSunk() {
     return this.ships.every((ship) => ship.isSunk());
   }
+  // Check for already attacked cells
+  checkRepeatAttack(x, y) {
+    const cell = this.find(x, y);
+    if (this.misses.includes(cell) || this.hits.includes(cell)) {
+      return true;
+    }
+    return false;
+  }
+  // Checks if coords are in bounds and if cell wasn't previously attacked
+  checkValidity(x, y) {
+    return (
+      this.inBounds(x) && this.inBounds(y) && !this.checkRepeatAttack(x, y)
+    );
+  }
   // Takes a pair of coordinates and determines whether or not
   // the attack hit a ship
   receiveAttack(x, y) {
-    // Check if coordinates are in bounds
-    if (!this.inBounds(x) || !this.inBounds(y)) return false;
+    // Check attack validity
+    if (!this.checkValidity(x, y)) return false;
 
     const cell = this.find(x, y);
-    // Check if cell was already attacked previously
-    if (this.misses.includes(cell) || this.hits.includes(cell)) {
-      return false;
-    }
     // Register hit on the ship
     if (cell.isShip) {
       cell.ship.hit();
@@ -126,16 +136,4 @@ export default class Gameboard {
       this.placeShip(ship, x, y);
     });
   }
-  // Return an array of potential ship landing board cells
-  // (When dragging a ship over the board it shows how a ship would be placed
-  // by highlighting the cells)
-  // dropTargetCells(ship, x, y) {
-  //   const arr = [];
-  //   for (let i = 0; i < ship.length; i++) {
-  //     const cell =
-  //       this.dir === 'hor' ? this.find(x + i, y) : this.find(x, y + i);
-  //     arr.push(cell);
-  //   }
-  //   return arr;
-  // }
 }
