@@ -4,7 +4,7 @@ import GameUI from './GameUI';
 export default class PlayGame {
   constructor(player) {
     this.player = new Player(player);
-    this.comp = new Computer();
+    this.comp = new Computer(this.player.board);
     this.ui = new GameUI(this.player, this.comp, this);
     this.gameActive = false;
   }
@@ -31,8 +31,8 @@ export default class PlayGame {
   }
   // Handle computer attack
   compAttack() {
-    const attMove = this.comp.attack();
-    this.player.board.receiveAttack(attMove[0], attMove[1]);
+    this.comp.attack();
+    // Update board display and check the win condition
     this.ui.boardDisplay.delBoard('.board');
     this.ui.boardDisplay.dispBoard(this.player.gameboard);
     this.checkWinCond();
