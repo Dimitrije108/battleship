@@ -113,7 +113,7 @@ export default class GameUI {
     const startBtn = document.querySelector('.start-btn');
     // Don't enable start until all ships have been placed on the board
     if (!this.allShipsPlaced()) {
-      statusBoard.textContent = `Place your ships Admiral ${this.player.name}!`;
+      statusBoard.textContent = `Choose direction and then click and drag a ship onto your board to place it Admiral ${this.player.name}!`;
       startBtn.disabled = true;
       return;
     }
